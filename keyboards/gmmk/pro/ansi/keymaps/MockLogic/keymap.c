@@ -48,6 +48,7 @@ enum custom_keycodes {
 	MRSE,
 	MFAC,
 	MFCW,
+	TJIGGLE,
 };
 
 
@@ -114,7 +115,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, KC_MYCM, KC_WHOM, KC_CALC, KC_MSEL, KC_MPRV, KC_MNXT, KC_MPLY, KC_MSTP, KC_MUTE, KC_VOLD, KC_VOLU, _______, KC_INS,          _______,
         DM_REC1, DM_PLY1, _______, _______, _______, _______, _______, _______, _______, TG(_SPACE), TG(_SPACE), _______, _______, EEP_RST,          _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,            _______,
-        MFCW,    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______,
+        MFCW,    _______, _______, _______, _______, _______, _______, TJIGGLE, _______, _______, _______, _______,          _______,          _______,
         KC_LSFT,          _______, _______, MFAC,    _______, _______, NK_TOGG, _______, _______, _______, _______,          KC_RSFT, _______, _______,
         _______, _______, _______,                            _______,                            _______, _______, KC_LEAD, _______, _______, _______
     ),
@@ -179,7 +180,12 @@ bool fet_cw_on = true;
 #include "features/autocorrection.h"
 bool fet_ac_on = true;
 
+// Mouse Jiggler
+bool mouse_jiggle_mode = false;
+
+
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+
   // CapsWord
   if (fet_cw_on) {
     if (!process_caps_word(keycode, record)) { return false; }
@@ -328,6 +334,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
             // when keycode is released
         }
         break;
+		
+	// Mouse Jiggler
+    case TJIGGLE:
+        if (record->event.pressed) {
+            // when keycode is pressed
+			if (mouse_jiggle_mode) {
+				mouse_jiggle_mode = false;
+			} else {
+				mouse_jiggle_mode = true;
+			}
+        } else {
+            // when keycode is released
+        }
+        break;
 	}
     return true;	
 
@@ -339,6 +359,15 @@ LEADER_EXTERNS();
 bool did_leader_succeed;
 
 void matrix_scan_user(void) {
+  // Mouse Jiggler
+  if (mouse_jiggle_mode) {
+    tap_code(KC_MS_UP);
+    tap_code(KC_MS_DOWN);
+    tap_code(KC_MS_LEFT);
+    tap_code(KC_MS_RIGHT);
+    tap_code(KC_MS_WH_UP);
+    tap_code(KC_MS_WH_DOWN);
+  }
   caps_word_task();
   LEADER_DICTIONARY() {
     // Initialize did_leader_succeed as well as leading to be false
@@ -473,12 +502,18 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		} else {
 			rgb_matrix_set_color(LED_CAPS, RGB_ORANGE2);
 		}
-		 // Autocorrection
+		// Autocorrection
         if(fet_ac_on) {
 			rgb_matrix_set_color(LED_C, RGB_BLUE);
 		} else {
 			rgb_matrix_set_color(LED_C, RGB_ORANGE2);
-		}	
+		}
+        // Mouse Jiggler
+        if(mouse_jiggle_mode) {
+            rgb_matrix_set_color(LED_J, RGB_BLUE);
+		} else {
+			rgb_matrix_set_color(LED_J, RGB_ORANGE2);
+		}
     }
 
     // Game Mode Layer RGB
