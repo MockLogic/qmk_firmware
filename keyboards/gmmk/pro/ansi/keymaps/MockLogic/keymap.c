@@ -12,6 +12,10 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Variations made by MockLogic
+Includes Mouse Jiggler from: https://github.com/DIYCharles/MouseJiggler/blob/master/QMK%20firmware/mousejiggler/keymaps/default/keymap.c
+
 */
 
 #include QMK_KEYBOARD_H
@@ -23,12 +27,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _FN1 2
 #define _MOUSE 3
 #define _GAME 4
-#define _LEADER 5
-#define _RGB 6
+#define _FN2 5
+#define _LEADER 6
+#define _RGB 7
 
 // Tap Dance declarations
 enum {
-    TD_ESC_FN1,
 	TD_ESC_GM
 };
 
@@ -48,6 +52,7 @@ enum custom_keycodes {
 	MRSE,
 	MFAC,
 	MFCW,
+	MFWHT,
 	TJIGGLE,
 };
 
@@ -55,7 +60,6 @@ enum custom_keycodes {
 // Tap Dance definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
     // Tap once for Escape, twice for layer toggle
-    [TD_ESC_FN1] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_ESC, _FN1),
 	[TD_ESC_GM] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_ESC, _GAME)
 };
 
@@ -120,14 +124,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______,                            _______,                            _______, _______, KC_LEAD, _______, _______, _______
     ),
 
-    // Simple Mouse Input Layer with most other functions turned off. Use arrow keys to control the curose. Spacebar to left click and Enter to right click.
+    // Mouse Layer where arrow keys move the mouse, Right Control is left click, and End is Right click.
     [_MOUSE] = LAYOUT(
-        TG(_MOUSE), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_NO,          _______,
-        KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,            KC_NO,  
-        KC_TAB,  KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,            KC_NO,  
-        KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,            KC_BTN2,          KC_NO,  
-        KC_NO,            KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   _______, KC_NO,   KC_NO,   KC_NO,            KC_BTN1,   KC_MS_U, KC_NO,  
-        KC_NO,   KC_NO,   KC_NO,                              KC_BTN1,                            KC_NO,   _______,  KC_NO,   KC_MS_L, KC_MS_D, KC_MS_R
+        TG(_MOUSE), _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______, _______,          _______,
+        _______,  _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______, _______,            KC_NO,  
+        _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______, _______,            KC_NO,  
+        _______,  _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,            _______,          KC_NO,  
+        KC_LSFT,             _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______, KC_RSFT,   KC_MS_U, KC_BTN2,  
+        _______,  _______,   _______,                              _______,                               _______,   _______,   KC_BTN1,   KC_MS_L, KC_MS_D, KC_MS_R
     ),
 
     // Gaming overlay. Capslock, Spacecadet Shift, Function, and Windows Key all disabled. CapsWord is not disabled!
@@ -137,7 +141,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
         KC_NO,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______,
         KC_LSFT,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_RSFT, _______, _______,
-        _______, KC_NO,   _______,                            _______,                            _______, KC_NO,   KC_NO,   _______, _______, _______
+        _______, KC_NO,   _______,                            _______,                            _______, MO(_FN2),   _______,   _______, _______, _______
+    ),
+	
+	// The Gamer function keys.
+	// Mostly Transparent to the Gamer level
+    [_FN2] = LAYOUT(
+        TO(_BASE), KC_MYCM, KC_WHOM, KC_CALC, KC_MSEL, KC_MPRV, KC_MNXT, KC_MPLY, KC_MSTP, KC_MUTE, KC_VOLD, KC_VOLU, _______, KC_INS,          _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______,
+        _______,          _______, _______, _______, _______, _______, NK_TOGG, _______, _______, _______, _______,          _______, _______, _______,
+        _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______, _______
     ),
 
     // Layer used when the Leader key is active. helpful to prevent mistakes, but also for rgb highlights
@@ -153,7 +168,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Layer used to configure RGB settings
 	// Left Side of board changes Hue, Saturation, and Brightness. Arrows change mode and speed. Function Keys are color presets.
     [_RGB] = LAYOUT(
-       TG(_RGB), MMAG,    MRSE,    MRED,    MORN,    MYEL,    MCRT,    MGRN,    MSGN,    MCYN,    MAZR,    MBLU,    MVLT,    RGB_TOG,          KC_MUTE,  
+       TG(_RGB), MMAG,    MRSE,    MRED,    MORN,    MYEL,    MCRT,    MGRN,    MSGN,    MCYN,    MAZR,    MBLU,    MVLT,    MFWHT,            RGB_TOG,  
         KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,            KC_NO,  
         KC_NO,   RGB_HUD, RGB_HUI, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,            KC_NO,  
         KC_NO,   RGB_SAI, RGB_SAD, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,            KC_NO,            KC_NO,  
@@ -166,11 +181,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #ifdef ENCODER_ENABLE
 bool encoder_update_user(uint8_t index, bool clockwise) {
-    if (clockwise) {
-      tap_code(KC_VOLU);
-    } else {
-      tap_code(KC_VOLD);
-    }
+	// If the RGB layer is active, change colors.
+    if(layer_state_is(_RGB)) {
+		if (clockwise) {
+          rgb_matrix_increase_hue();
+        } else {
+          rgb_matrix_decrease_hue();
+        }	
+	// Otherwise, adjust volume
+	} else {
+		if (clockwise) {
+          tap_code(KC_VOLU);
+        } else {
+          tap_code(KC_VOLD);
+        }
+	}
     return true;
 }
 #endif // ENCODER_ENABLE
@@ -334,6 +359,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
             // when keycode is released
         }
         break;
+	
+	case MFWHT:
+	    if (record->event.pressed) {
+            // when keycode is pressed
+            rgb_matrix_sethsv(255, 0, 255);
+        } else {
+            // when keycode is released
+        }
+        break;
 		
 	// Mouse Jiggler
     case TJIGGLE:
@@ -465,8 +499,8 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     // Function Layer RGB
     switch (get_highest_layer(layer_state)) { // special handling per layer
     case _FN1: 
-        rgb_matrix_set_color(LED_ESC, RGB_PURPLE); // Light up Esc Purple
 		rgb_matrix_set_color(LED_FN, RGB_PURPLE); // Light up FN Purple
+		rgb_matrix_set_color(LED_LEAD, RGB_BLUE); // Leader Key
 		rgb_matrix_set_color(LED_F1, RGB_CHARTREUSE); // F1-F11 Basic Media Controls
 		rgb_matrix_set_color(LED_F2, RGB_CHARTREUSE);
 		rgb_matrix_set_color(LED_F3, RGB_CHARTREUSE);
@@ -519,10 +553,8 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     // Game Mode Layer RGB
     switch (get_highest_layer(layer_state)) { // special handling per layer
     case _GAME: 
-        rgb_matrix_set_color(LED_LWIN, RGB_RED); //light up Winkey red when disabled
-		rgb_matrix_set_color(LED_CAPS, RGB_RED); //light up Capslock red when disabled
-		rgb_matrix_set_color(LED_LEAD, RGB_RED); //light up Leader red when disabled
-		rgb_matrix_set_color(LED_FN, RGB_RED); //light up Function red when disabled
+        rgb_matrix_set_color(LED_LWIN, RGB_DKRED); //light up Winkey red when disabled
+		rgb_matrix_set_color(LED_CAPS, RGB_DKRED); //light up Capslock red when disabled
 		rgb_matrix_set_color(LED_ESC, RGB_PURPLE); //light up Esc Purple
         rgb_matrix_set_color(LED_W, RGB_GREEN); //light up gaming keys with WSAD higlighted
         rgb_matrix_set_color(LED_S, RGB_GREEN);
@@ -547,6 +579,30 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		rgb_matrix_set_color(LED_GRV, RGB_WHITE);
     }
 
+    // Gamer Function Layer RGB
+    switch (get_highest_layer(layer_state)) { // special handling per layer
+    case _FN2: 
+        rgb_matrix_set_color(LED_ESC, RGB_PURPLE); // Light up Esc Purple
+	    rgb_matrix_set_color(LED_FN, RGB_PURPLE); // Light up FN Purple
+		rgb_matrix_set_color(LED_F1, RGB_CHARTREUSE); // F1-F11 Basic Media Controls
+		rgb_matrix_set_color(LED_F2, RGB_CHARTREUSE);
+		rgb_matrix_set_color(LED_F3, RGB_CHARTREUSE);
+		rgb_matrix_set_color(LED_F4, RGB_CHARTREUSE);
+		rgb_matrix_set_color(LED_F5, RGB_CHARTREUSE);
+		rgb_matrix_set_color(LED_F6, RGB_CHARTREUSE);
+		rgb_matrix_set_color(LED_F7, RGB_CHARTREUSE);
+		rgb_matrix_set_color(LED_F8, RGB_CHARTREUSE);
+		rgb_matrix_set_color(LED_F9, RGB_CHARTREUSE);
+		rgb_matrix_set_color(LED_F10, RGB_CHARTREUSE);
+		rgb_matrix_set_color(LED_F11, RGB_CHARTREUSE);
+		rgb_matrix_set_color(LED_DEL, RGB_GREEN); // Insert
+        if(keymap_config.nkro) {
+		    rgb_matrix_set_color(LED_N, RGB_BLUE); // NKey Rollover
+		} else {
+			rgb_matrix_set_color(LED_N, RGB_ORANGE2);
+		}
+    }
+
     // Space Cadet Shift RGB
     switch (get_highest_layer(layer_state)) { // special handling per layer
     case _SPACE:
@@ -568,10 +624,12 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         rgb_matrix_set_color(LED_RIGHT, RGB_CHARTREUSE);
 		rgb_matrix_set_color(LED_UP, RGB_CHARTREUSE);
 	    rgb_matrix_set_color(LED_DOWN, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_SPC, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_RSFT, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_ENT, RGB_ORANGE2);
+		rgb_matrix_set_color(LED_LEAD, RGB_GREEN);
+		rgb_matrix_set_color(LED_END, RGB_SPRINGGREEN);
 		rgb_matrix_set_color(LED_ESC, RGB_PURPLE); //light up Esc Purple
+		rgb_matrix_set_color(LED_PGDN, RGB_DKRED);
+		rgb_matrix_set_color(LED_PGUP, RGB_DKRED); 
+		rgb_matrix_set_color(LED_HOME, RGB_DKRED);
     }
 	
 	// RGB Control Board
@@ -617,7 +675,7 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		rgb_matrix_set_color(LED_DOWN, RGB_BLUE);
 		rgb_matrix_set_color(LED_LEFT, RGB_RED);
 		rgb_matrix_set_color(LED_RIGHT, RGB_GREEN);
-		rgb_matrix_set_color(LED_DEL, RGB_BLACK);
+		rgb_matrix_set_color(LED_DEL, RGB_WHITE);
 		// rgb_matrix_set_color(LED_HOME, RGB_WHITE);
 		// rgb_matrix_set_color(LED_PGUP, RGB_WHITE);
 		// rgb_matrix_set_color(LED_PGDN, RGB_WHITE);

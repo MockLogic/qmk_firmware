@@ -39,6 +39,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef RGB_MATRIX_ENABLE
 #define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_SOLID_COLOR
 #define RGB_DISABLE_WHEN_USB_SUSPENDED
+#define RGB_MATRIX_FRAMEBUFFER_EFFECTS
+#define RGB_MATRIX_KEYPRESSES
 #endif
 
 // RGB step values
