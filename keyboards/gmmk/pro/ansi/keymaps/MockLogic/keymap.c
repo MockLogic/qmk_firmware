@@ -487,6 +487,46 @@ bool caps_word_press_user(uint16_t keycode) {
   }
 }
 
+//Dynamic Macro Recording Indicator
+bool isRecording = false;
+bool isRecordingLedOn = false;
+static uint16_t recording_timer;
+
+// Matrix scan function constantly running => Similar to "do () while (keyboard is powered on)"
+void rgb_matrix_indicators_user(void) 
+{	
+    if (isRecording)
+    {
+        // timer_elapsed() is a built-in function in qmk => it calculates in ms the time elapsed with timer_read()
+        if (timer_elapsed(recording_timer) > 500) 
+        {
+            isRecordingLedOn = !isRecordingLedOn;
+            recording_timer = timer_read();
+        }
+        if (isRecordingLedOn)
+        {
+			// This sets the Grave key to red.
+            rgb_matrix_set_color(LED_GRV, RGB_RED);
+        }
+    }
+}
+
+// Listener function => Triggered when you start recording a macro.
+void dynamic_macro_record_start_user(void) 
+{
+    isRecording = true;
+    isRecordingLedOn = true;
+    // timer_read() is a built-in function in qmk. => It read the current time
+    recording_timer = timer_read();
+}
+
+// Listener function => Triggered when the macro recording is stopped.
+void dynamic_macro_record_end_user(int8_t direction) 
+{
+    isRecording = false;
+    isRecordingLedOn = false;
+}
+
 #ifdef RGB_MATRIX_ENABLE
 // Inidcator Lights
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
@@ -515,7 +555,12 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		rgb_matrix_set_color(LED_BSLS, RGB_RED); // Reset Key
 		rgb_matrix_set_color(LED_BSPC, RGB_RED); // Clear EEPROM
 		rgb_matrix_set_color(LED_DEL, RGB_GREEN); // Insert
-		rgb_matrix_set_color(LED_GRV, RGB_YELLOW); // Start/Stop Macro Recording 1
+		// If macro is recording, let blink through otherwise make yellow
+		if(isRecording) {
+			// Do nothing
+		} else {
+		    rgb_matrix_set_color(LED_GRV, RGB_YELLOW); // Start/Stop Macro Recording 1
+		}
 		rgb_matrix_set_color(LED_1, RGB_GREEN); // Play Macro Recording 1
 		// rgb_matrix_set_color(LED_2, RGB_GREEN); // Macro Recording 2
 		if(layer_state_is(_SPACE)) {
