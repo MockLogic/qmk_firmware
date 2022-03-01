@@ -13,6 +13,7 @@ STARTUP_NUMLOCK_ON = yes
 ENCODER_DEFAULTACTIONS_ENABLE = no
 STARTUP_NUMLOCK_ON = yes
 INVERT_NUMLOCK_INDICATOR = yes
+KEY_LOCK_ENABLE = yes
 
 SRC += features/caps_word.c
 SRC += features/autocorrection.c

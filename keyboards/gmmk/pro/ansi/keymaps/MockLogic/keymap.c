@@ -119,7 +119,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, KC_MYCM, KC_WHOM, KC_CALC, KC_MSEL, KC_MPRV, KC_MNXT, KC_MPLY, KC_MSTP, KC_MUTE, KC_VOLD, KC_VOLU, _______, KC_INS,          _______,
         DM_REC1, DM_PLY1, _______, _______, _______, _______, _______, _______, _______, TG(_SPACE), TG(_SPACE), _______, _______, EEP_RST,          _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,            _______,
-        MFCW,    _______, _______, _______, _______, _______, _______, TJIGGLE, _______, _______, _______, _______,          _______,          _______,
+        MFCW,    _______, _______, _______, _______, _______, _______, TJIGGLE, _______, KC_LOCK, _______, _______,          _______,          _______,
         KC_LSFT,          _______, _______, MFAC,    _______, _______, NK_TOGG, _______, _______, _______, _______,          KC_RSFT, _______, _______,
         _______, _______, _______,                            _______,                            _______, _______, KC_LEAD, _______, _______, _______
     ),
@@ -148,9 +148,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	// Mostly Transparent to the Gamer level
     [_FN2] = LAYOUT(
         TO(_BASE), KC_MYCM, KC_WHOM, KC_CALC, KC_MSEL, KC_MPRV, KC_MNXT, KC_MPLY, KC_MSTP, KC_MUTE, KC_VOLD, KC_VOLU, _______, KC_INS,          _______,
+        _______, DM_PLY1, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_LOCK, _______, _______,          _______,          _______,
         _______,          _______, _______, _______, _______, _______, NK_TOGG, _______, _______, _______, _______,          _______, _______, _______,
         _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______, _______
     ),
@@ -487,7 +487,20 @@ bool caps_word_press_user(uint16_t keycode) {
   }
 }
 
-//Dynamic Macro Recording Indicator
+// CapsWord Engaged Indicator
+bool CapsWordEngaged = false;
+void caps_word_set_user(bool active) {
+  if (active) {
+    // Do something when Caps Word activates.
+	CapsWordEngaged = true;
+	// RGB is turned on based on this farther down.
+  } else {
+    // Do something when Caps Word deactivates.
+	CapsWordEngaged = false;
+  }
+}
+
+// Dynamic Macro Recording Indicator
 bool isRecording = false;
 bool isRecordingLedOn = false;
 static uint16_t recording_timer;
@@ -535,12 +548,19 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     if (IS_HOST_LED_ON(USB_LED_CAPS_LOCK)) {
         rgb_matrix_set_color(LED_CAPS, RGB_BLUE);
     }
+	
+	// CapsWord RGB Indicators
+	if (CapsWordEngaged) {
+		rgb_matrix_set_color(LED_LSFT, RGB_BLUE);
+	    rgb_matrix_set_color(LED_RSFT, RGB_BLUE);
+	}
  
     // Function Layer RGB
     switch (get_highest_layer(layer_state)) { // special handling per layer
     case _FN1: 
 		rgb_matrix_set_color(LED_FN, RGB_PURPLE); // Light up FN Purple
-		rgb_matrix_set_color(LED_LEAD, RGB_BLUE); // Leader Key
+		rgb_matrix_set_color(LED_LEAD, RGB_YELLOW); // Leader Key
+		rgb_matrix_set_color(LED_L, RGB_YELLOW); // Key Lock
 		rgb_matrix_set_color(LED_F1, RGB_CHARTREUSE); // F1-F11 Basic Media Controls
 		rgb_matrix_set_color(LED_F2, RGB_CHARTREUSE);
 		rgb_matrix_set_color(LED_F3, RGB_CHARTREUSE);
@@ -629,6 +649,7 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     case _FN2: 
         rgb_matrix_set_color(LED_ESC, RGB_PURPLE); // Light up Esc Purple
 	    rgb_matrix_set_color(LED_FN, RGB_PURPLE); // Light up FN Purple
+		rgb_matrix_set_color(LED_L, RGB_YELLOW); // Key Lock
 		rgb_matrix_set_color(LED_F1, RGB_CHARTREUSE); // F1-F11 Basic Media Controls
 		rgb_matrix_set_color(LED_F2, RGB_CHARTREUSE);
 		rgb_matrix_set_color(LED_F3, RGB_CHARTREUSE);
@@ -641,6 +662,7 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		rgb_matrix_set_color(LED_F10, RGB_CHARTREUSE);
 		rgb_matrix_set_color(LED_F11, RGB_CHARTREUSE);
 		rgb_matrix_set_color(LED_DEL, RGB_GREEN); // Insert
+		rgb_matrix_set_color(LED_1, RGB_GREEN); // Play Macro Recording 1
         if(keymap_config.nkro) {
 		    rgb_matrix_set_color(LED_N, RGB_BLUE); // NKey Rollover
 		} else {
@@ -651,8 +673,8 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     // Space Cadet Shift RGB
     switch (get_highest_layer(layer_state)) { // special handling per layer
     case _SPACE:
-        rgb_matrix_set_color(LED_LSFT, RGB_BLUE);
-        rgb_matrix_set_color(LED_RSFT, RGB_BLUE);
+        rgb_matrix_set_color(LED_9, RGB_BLUE);
+        rgb_matrix_set_color(LED_0, RGB_BLUE);
 	//	rgb_matrix_set_color(LED_ESC, RGB_PURPLE); //light up Esc Purple
     }
 	

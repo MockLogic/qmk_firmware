@@ -52,3 +52,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Dynamic Macro Settings
 #define DYNAMIC_MACRO_NO_NESTING
+
+// CapsWord Settings
+#define CAPS_WORD_IDLE_TIMEOUT 5000  // Turn off Caps Word after 5 seconds.
