@@ -55,3 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // CapsWord Settings
 #define CAPS_WORD_IDLE_TIMEOUT 5000  // Turn off Caps Word after 5 seconds.
+
+// AutoShift settings
+#define AUTO_SHIFT_TIMEOUT 150 // How long a key needs to be pressed to be shifted. 
+#define AUTO_SHIFT_DISABLED_AT_STARTUP // Use it, but not enabled by default.

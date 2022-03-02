@@ -30,6 +30,7 @@ Includes Mouse Jiggler from: https://github.com/DIYCharles/MouseJiggler/blob/mas
 #define _FN2 5
 #define _LEADER 6
 #define _RGB 7
+#define _ASHIFT 8
 
 // Tap Dance declarations
 enum {
@@ -119,7 +120,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, KC_MYCM, KC_WHOM, KC_CALC, KC_MSEL, KC_MPRV, KC_MNXT, KC_MPLY, KC_MSTP, KC_MUTE, KC_VOLD, KC_VOLU, _______, KC_INS,          _______,
         DM_REC1, DM_PLY1, _______, _______, _______, _______, _______, _______, _______, TG(_SPACE), TG(_SPACE), _______, _______, EEP_RST,          _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,            _______,
-        MFCW,    _______, _______, _______, _______, _______, _______, TJIGGLE, _______, KC_LOCK, _______, _______,          _______,          _______,
+        MFCW,    _______, KC_ASTG, _______, _______, _______, _______, TJIGGLE, _______, KC_LOCK, _______, _______,          _______,          _______,
         KC_LSFT,          _______, _______, MFAC,    _______, _______, NK_TOGG, _______, _______, _______, _______,          KC_RSFT, _______, _______,
         _______, _______, _______,                            _______,                            _______, _______, KC_LEAD, _______, _______, _______
     ),
@@ -174,6 +175,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_NO,   RGB_SAI, RGB_SAD, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,            KC_NO,            KC_NO,  
         KC_NO,            RGB_VAI, RGB_VAD, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,            KC_NO,   RGB_MOD, KC_NO,  
         KC_NO,   KC_NO,   KC_NO,                              KC_NO,                              KC_NO,   KC_NO,   KC_NO,   RGB_SPD, RGB_RMOD, RGB_SPI
+    ),
+	
+	// Layer used to configure Auto Shift
+    [_ASHIFT] = LAYOUT(
+        TG(_ASHIFT), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_ASTG,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_ASUP,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          KC_ASDN,
+        KC_LSFT,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_RSFT, _______, KC_ASRP,
+        _______, _______, _______,                            _______,                            _______, KC_NO,   _______,   _______, _______, _______
     ),
 
 };
@@ -446,6 +457,12 @@ void matrix_scan_user(void) {
 	  did_leader_succeed = true;
     }
 	
+	SEQ_FIVE_KEYS(KC_S, KC_H, KC_I, KC_F, KC_T) {
+      // When I press KC_LEAD and then SHIFT
+      layer_on(_ASHIFT);
+	  did_leader_succeed = true;
+    }
+	
 	// Call leader_end at the end of the function, instead of at
     // the start. This way, we're sure we have set did_leader_succeed.
 	leader_end();
@@ -613,6 +630,12 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		} else {
 			rgb_matrix_set_color(LED_J, RGB_ORANGE2);
 		}
+		// Autoshift
+		if(get_autoshift_state()) {
+			rgb_matrix_set_color(LED_S, RGB_BLUE);
+		} else {
+		    rgb_matrix_set_color(LED_S, RGB_ORANGE2);
+		}
     }
 
     // Game Mode Layer RGB
@@ -748,5 +771,21 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		// rgb_matrix_set_color(LED_PGDN, RGB_WHITE);
 		// rgb_matrix_set_color(LED_END, RGB_WHITE);
     }
+	
+	// Auto Shift Configuration Layer RGB
+    switch (get_highest_layer(layer_state)) { // special handling per layer
+    case _ASHIFT:
+        rgb_matrix_set_color(LED_ESC, RGB_PURPLE); // ESC key is Purple
+		rgb_matrix_set_color(LED_FN, RGB_DKRED); // Function Key Disabled
+	    rgb_matrix_set_color(LED_PGUP, RGB_GREEN); // More time
+	    rgb_matrix_set_color(LED_PGDN, RGB_RED); // Less time
+	    rgb_matrix_set_color(LED_END, RGB_YELLOW); // Print Time
+		// Autoshift On/Off
+		if(get_autoshift_state()) {
+			rgb_matrix_set_color(LED_HOME, RGB_BLUE);
+		} else {
+		    rgb_matrix_set_color(LED_HOME, RGB_ORANGE2);
+		}
+	}
 }
 #endif
