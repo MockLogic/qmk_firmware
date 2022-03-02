@@ -24,13 +24,15 @@ Includes Mouse Jiggler from: https://github.com/DIYCharles/MouseJiggler/blob/mas
 
 #define _BASE 0
 #define _SPACE 1
-#define _FN1 2
-#define _MOUSE 3
+#define _MOUSE 2
+#define _FN1 3
 #define _GAME 4
 #define _FN2 5
 #define _LEADER 6
 #define _RGB 7
 #define _ASHIFT 8
+#define _NUM 9
+
 
 // Tap Dance declarations
 enum {
@@ -55,6 +57,7 @@ enum custom_keycodes {
 	MFCW,
 	MFWHT,
 	TJIGGLE,
+	SELWORD,
 };
 
 
@@ -114,17 +117,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______, _______
     ),
 
-    // The function keys.
-	// Space Cadet Shift is over ridden on this layer.
-    [_FN1] = LAYOUT(
-        _______, KC_MYCM, KC_WHOM, KC_CALC, KC_MSEL, KC_MPRV, KC_MNXT, KC_MPLY, KC_MSTP, KC_MUTE, KC_VOLD, KC_VOLU, _______, KC_INS,          _______,
-        DM_REC1, DM_PLY1, _______, _______, _______, _______, _______, _______, _______, TG(_SPACE), TG(_SPACE), _______, _______, EEP_RST,          _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,            _______,
-        MFCW,    _______, KC_ASTG, _______, _______, _______, _______, TJIGGLE, _______, KC_LOCK, _______, _______,          _______,          _______,
-        KC_LSFT,          _______, _______, MFAC,    _______, _______, NK_TOGG, _______, _______, _______, _______,          KC_RSFT, _______, _______,
-        _______, _______, _______,                            _______,                            _______, _______, KC_LEAD, _______, _______, _______
-    ),
-
     // Mouse Layer where arrow keys move the mouse, Right Control is left click, and End is Right click.
     [_MOUSE] = LAYOUT(
         TG(_MOUSE), _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______, _______,          _______,
@@ -135,35 +127,46 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,  _______,   _______,                              _______,                               _______,   _______,   KC_BTN1,   KC_MS_L, KC_MS_D, KC_MS_R
     ),
 
-    // Gaming overlay. Capslock, Spacecadet Shift, Function, and Windows Key all disabled. CapsWord is not disabled!
+    // The function keys.
+	// Space Cadet Shift and the Mouse Layer are over ridden on this layer.
+    [_FN1] = LAYOUT(
+        DM_RSTP, DM_REC1, DM_REC2, _______, _______, SELWORD, _______, _______, _______, _______, _______, _______, _______, KC_INS,          _______,
+        _______, DM_PLY1, DM_PLY2, _______, _______, _______, _______, _______, _______, TG(_SPACE), TG(_SPACE), _______, _______, EEP_RST,          KC_HOME,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,            KC_PGUP,
+        MFCW,    _______, KC_ASTG, _______, _______, _______, _______, TJIGGLE, _______, KC_LOCK, _______, _______,          _______,          KC_PGDN,
+        KC_LSFT,          _______, _______, MFAC,    _______, _______, NK_TOGG, _______, _______, _______, _______,          KC_RSFT, KC_UP,   KC_END,
+        _______, _______, _______,                            _______,                            _______, _______, KC_LEAD, KC_LEFT, KC_DOWN, KC_RGHT
+    ),
+
+    // Gaming overlay. Capslock, Spacecadet Shift, Function, Mouse Layer, and Windows Key all disabled. CapsWord is not disabled!
     [_GAME] = LAYOUT(
         TD(TD_ESC_GM), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
-        KC_NO,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______,
-        KC_LSFT,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_RSFT, _______, _______,
-        _______, KC_NO,   _______,                            _______,                            _______, MO(_FN2),   _______,   _______, _______, _______
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_HOME,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_PGUP,
+        KC_NO,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          KC_PGDN,
+        KC_LSFT,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_RSFT, KC_UP,   KC_END,
+        _______, KC_NO,   _______,                            _______,                            _______, MO(_FN2),   _______,   KC_LEFT, KC_DOWN, KC_RGHT
     ),
 	
 	// The Gamer function keys.
 	// Mostly Transparent to the Gamer level
     [_FN2] = LAYOUT(
-        TO(_BASE), KC_MYCM, KC_WHOM, KC_CALC, KC_MSEL, KC_MPRV, KC_MNXT, KC_MPLY, KC_MSTP, KC_MUTE, KC_VOLD, KC_VOLU, _______, KC_INS,          _______,
-        _______, DM_PLY1, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
+        TO(_BASE), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_INS,          _______,
+        _______, DM_PLY1, DM_PLY1, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_LOCK, _______, _______,          _______,          _______,
         _______,          _______, _______, _______, _______, _______, NK_TOGG, _______, _______, _______, _______,          _______, _______, _______,
         _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______, _______
     ),
 
-    // Layer used when the Leader key is active. helpful to prevent mistakes, but also for rgb highlights
+    // Layer used when the Leader key is active. helpful to prevent mistakes, but also for rgb highlights. No Space Cadet or mouse layer here.
     [_LEADER] = LAYOUT(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
-        KC_NO,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______,
-        KC_LSFT,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_RSFT, _______, _______,
-        _______, KC_NO,   _______,                            _______,                            _______, KC_NO,   _______,   _______, _______, _______
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_HOME,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_PGUP,
+        KC_NO,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          KC_PGDN,
+        KC_LSFT,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_RSFT, KC_UP,   KC_END,
+        _______, KC_NO,   _______,                            _______,                            _______, KC_NO,   _______,   KC_LEFT, KC_DOWN, KC_RGHT
     ),
 
     // Layer used to configure RGB settings
@@ -177,14 +180,40 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_NO,   KC_NO,   KC_NO,                              KC_NO,                              KC_NO,   KC_NO,   KC_NO,   RGB_SPD, RGB_RMOD, RGB_SPI
     ),
 	
-	// Layer used to configure Auto Shift
+	// Layer used to configure Auto Shift. Space Cadet and Mouse Layer disabled.
     [_ASHIFT] = LAYOUT(
-        TG(_ASHIFT), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
+        TG(_ASHIFT), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_ASTG,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_ASTG,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_ASUP,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          KC_ASDN,
-        KC_LSFT,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_RSFT, _______, KC_ASRP,
-        _______, _______, _______,                            _______,                            _______, KC_NO,   _______,   _______, _______, _______
+        KC_LSFT,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_RSFT, KC_UP, KC_ASRP,
+        _______, _______, _______,                            _______,                            _______, KC_NO,   _______,   KC_LEFT, KC_DOWN, KC_RGHT
+    ),
+	
+	 /* _NUM (Numpad) Layout
+     *  Note: A symbol preceeded by "P" is a Numpad-encoded version of the key -- any app that differentiates will recognize the char as coming from a physical numpad.
+     * ,-------------------------------------------------------------------------------------------------------------.
+     * | Exit || ____ | ____ | ____ | ____ || ____ | ____ | ____ | ____ || ____ | ____ | ____ | ____ || ____ || ____ |
+     * |=============================================================================================================|
+     * | ____ |  P1  |  P2  |  P3  |  P4  |  P5  |  P6  |  P7  |  P8  |  P9  |  P0  |  P-  |  P+  | ________ || None |
+     * |------+------+------+------+------+------+------+------+------+------+------+------+------+----------++------|
+     * |  ______ | None |  Up  | None | None | None | None |  P4  |  P5  |  P6  |  P+  | ____ | ____ | _____ || None |
+     * |---------+------+------+------+------+------+------+------+------+------+------+------+------+-------++------|
+     * |  ________  | Left | Down | Rght | None| None | None |  P1  |  P2  |  P3  |  P*  | ____ |   P-Enter  || None |
+     * |------------+------+------+------+-----+------+------+------+------+------+------+------|----+========+------|
+     * |  __________  | None | ____ | ____ | ____ | None | None |  P0  |  P0  |  P.  |  P/  | ______ || None || PEnt |
+     * |--------------+------+------+------+------+------+------+------+------+------+------+--+=====++------++======|
+     * |  ____  |  ____  |  ____  |               _____                  | ____ | None | ____ || None | None | PEnt |
+     * `------------------------------------------------------------------------------------------------------------'
+     */
+
+    [_NUM] = LAYOUT(
+        TG(_NUM), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
+        _______, KC_P1,   KC_P2,   KC_P3,   KC_P4,   KC_P5,   KC_P6,   KC_P7,   KC_P8,   KC_P9,   KC_P0,   KC_PMNS, KC_PPLS, _______,          KC_NO,
+        _______, KC_NO,   KC_UP,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_P4,   KC_P5,   KC_P6,   KC_PPLS, _______, _______, _______,          KC_NO,
+        _______, KC_LEFT, KC_DOWN, KC_RGHT, KC_NO,   KC_NO,   KC_NO,   KC_P1,   KC_P2,   KC_P3,   KC_PAST, _______,          KC_PENT,          KC_NO,
+        _______,          KC_NO,   _______, _______, _______, KC_NO,   KC_NO,   KC_P0,   KC_P0,   KC_PDOT, KC_PSLS,          _______, KC_NO,   KC_PENT,
+        _______, _______, _______,                            _______,                            _______, KC_NO,   _______, KC_NO,   KC_NO,   KC_PENT
     ),
 
 };
@@ -198,7 +227,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
           rgb_matrix_increase_hue();
         } else {
           rgb_matrix_decrease_hue();
-        }	
+        }
 	// Otherwise, adjust volume
 	} else {
 		if (clockwise) {
@@ -211,16 +240,21 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 }
 #endif // ENCODER_ENABLE
 
+// Include Features
 #include "features/caps_word.h"
 bool fet_cw_on = true;
 #include "features/autocorrection.h"
 bool fet_ac_on = true;
+#include "features/select_word.h"
 
 // Mouse Jiggler
 bool mouse_jiggle_mode = false;
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+
+  // Select Word
+  if (!process_select_word(keycode, record, SELWORD)) { return false; }
 
   // CapsWord
   if (fet_cw_on) {
@@ -463,6 +497,12 @@ void matrix_scan_user(void) {
 	  did_leader_succeed = true;
     }
 	
+	SEQ_THREE_KEYS(KC_N, KC_U, KC_M) {
+      // When I press KC_LEAD and then NUM
+      layer_on(_NUM);
+	  did_leader_succeed = true;
+    }
+	
 	// Call leader_end at the end of the function, instead of at
     // the start. This way, we're sure we have set did_leader_succeed.
 	leader_end();
@@ -535,8 +575,9 @@ void rgb_matrix_indicators_user(void)
         }
         if (isRecordingLedOn)
         {
-			// This sets the Grave key to red.
-            rgb_matrix_set_color(LED_GRV, RGB_RED);
+			// This sets the FN key to blue and the ESC key to red.
+            rgb_matrix_set_color(LED_ESC, RGB_RED);
+			rgb_matrix_set_color(LED_FN, RGB_BLUE);
         }
     }
 }
@@ -578,17 +619,11 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		rgb_matrix_set_color(LED_FN, RGB_PURPLE); // Light up FN Purple
 		rgb_matrix_set_color(LED_LEAD, RGB_YELLOW); // Leader Key
 		rgb_matrix_set_color(LED_L, RGB_YELLOW); // Key Lock
-		rgb_matrix_set_color(LED_F1, RGB_CHARTREUSE); // F1-F11 Basic Media Controls
-		rgb_matrix_set_color(LED_F2, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F3, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F4, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F5, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F6, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F7, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F8, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F9, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F10, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F11, RGB_CHARTREUSE);
+		rgb_matrix_set_color(LED_F1, RGB_YELLOW); // F1 record dynamic Macro 1
+		rgb_matrix_set_color(LED_F2, RGB_YELLOW); // F2 record dynamic Macro 2
+		rgb_matrix_set_color(LED_F5, RGB_CHARTREUSE); // F5 Select Word
+		rgb_matrix_set_color(LED_1, RGB_GREEN); // Play Macro Recording 1
+		rgb_matrix_set_color(LED_2, RGB_GREEN); // Play Macro Recording 2
 		rgb_matrix_set_color(LED_BSLS, RGB_RED); // Reset Key
 		rgb_matrix_set_color(LED_BSPC, RGB_RED); // Clear EEPROM
 		rgb_matrix_set_color(LED_DEL, RGB_GREEN); // Insert
@@ -596,10 +631,8 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		if(isRecording) {
 			// Do nothing
 		} else {
-		    rgb_matrix_set_color(LED_GRV, RGB_YELLOW); // Start/Stop Macro Recording 1
+		    rgb_matrix_set_color(LED_ESC, RGB_DKRED); // Stop Macro Recording
 		}
-		rgb_matrix_set_color(LED_1, RGB_GREEN); // Play Macro Recording 1
-		// rgb_matrix_set_color(LED_2, RGB_GREEN); // Macro Recording 2
 		if(layer_state_is(_SPACE)) {
 		    rgb_matrix_set_color(LED_9, RGB_BLUE); // Space Cadet
             rgb_matrix_set_color(LED_0, RGB_BLUE); // Space Cadet
@@ -636,10 +669,9 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		} else {
 		    rgb_matrix_set_color(LED_S, RGB_ORANGE2);
 		}
-    }
-
+		break;
+	
     // Game Mode Layer RGB
-    switch (get_highest_layer(layer_state)) { // special handling per layer
     case _GAME: 
         rgb_matrix_set_color(LED_LWIN, RGB_DKRED); //light up Winkey red when disabled
 		rgb_matrix_set_color(LED_CAPS, RGB_DKRED); //light up Capslock red when disabled
@@ -665,50 +697,29 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		rgb_matrix_set_color(LED_3, RGB_ORANGE2);
 		rgb_matrix_set_color(LED_4, RGB_ORANGE2);
 		rgb_matrix_set_color(LED_GRV, RGB_WHITE);
-    }
+		break;
 
     // Gamer Function Layer RGB
-    switch (get_highest_layer(layer_state)) { // special handling per layer
     case _FN2: 
         rgb_matrix_set_color(LED_ESC, RGB_PURPLE); // Light up Esc Purple
 	    rgb_matrix_set_color(LED_FN, RGB_PURPLE); // Light up FN Purple
 		rgb_matrix_set_color(LED_L, RGB_YELLOW); // Key Lock
-		rgb_matrix_set_color(LED_F1, RGB_CHARTREUSE); // F1-F11 Basic Media Controls
-		rgb_matrix_set_color(LED_F2, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F3, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F4, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F5, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F6, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F7, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F8, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F9, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F10, RGB_CHARTREUSE);
-		rgb_matrix_set_color(LED_F11, RGB_CHARTREUSE);
 		rgb_matrix_set_color(LED_DEL, RGB_GREEN); // Insert
 		rgb_matrix_set_color(LED_1, RGB_GREEN); // Play Macro Recording 1
+		rgb_matrix_set_color(LED_2, RGB_GREEN); // Play Macro Recording 1
         if(keymap_config.nkro) {
 		    rgb_matrix_set_color(LED_N, RGB_BLUE); // NKey Rollover
 		} else {
 			rgb_matrix_set_color(LED_N, RGB_ORANGE2);
 		}
-    }
-
-    // Space Cadet Shift RGB
-    switch (get_highest_layer(layer_state)) { // special handling per layer
-    case _SPACE:
-        rgb_matrix_set_color(LED_9, RGB_BLUE);
-        rgb_matrix_set_color(LED_0, RGB_BLUE);
-	//	rgb_matrix_set_color(LED_ESC, RGB_PURPLE); //light up Esc Purple
-    }
+		break;
 	
 	// Leader key active RGB
-    switch (get_highest_layer(layer_state)) { // special handling per layer
     case _LEADER:
         rgb_matrix_set_color(LED_LEAD, RGB_BLUE);
-    }
+		break;
 	
 	// Mouse Mode RGB
-    switch (get_highest_layer(layer_state)) { // special handling per layer
     case _MOUSE:
         rgb_matrix_set_color(LED_LEFT, RGB_CHARTREUSE);
         rgb_matrix_set_color(LED_RIGHT, RGB_CHARTREUSE);
@@ -720,10 +731,9 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		rgb_matrix_set_color(LED_PGDN, RGB_DKRED);
 		rgb_matrix_set_color(LED_PGUP, RGB_DKRED); 
 		rgb_matrix_set_color(LED_HOME, RGB_DKRED);
-    }
+		break;
 	
 	// RGB Control Board
-	switch (get_highest_layer(layer_state)) { // special handling per layer
 	case _RGB:
         rgb_matrix_set_color(LED_F1, RGB_MAGENTA);
         rgb_matrix_set_color(LED_F2, RGB_PINK);
@@ -770,10 +780,10 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		// rgb_matrix_set_color(LED_PGUP, RGB_WHITE);
 		// rgb_matrix_set_color(LED_PGDN, RGB_WHITE);
 		// rgb_matrix_set_color(LED_END, RGB_WHITE);
-    }
+		break;
+
 	
 	// Auto Shift Configuration Layer RGB
-    switch (get_highest_layer(layer_state)) { // special handling per layer
     case _ASHIFT:
         rgb_matrix_set_color(LED_ESC, RGB_PURPLE); // ESC key is Purple
 		rgb_matrix_set_color(LED_FN, RGB_DKRED); // Function Key Disabled
@@ -786,6 +796,64 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		} else {
 		    rgb_matrix_set_color(LED_HOME, RGB_ORANGE2);
 		}
-	}
+		break;
+		
+	// Numpad overlay RGB
+    case _NUM:
+        rgb_matrix_set_color(LED_ESC, RGB_PURPLE); // ESC key is Purple
+		rgb_matrix_set_color(LED_FN, RGB_DKRED); // Function key disabled
+        rgb_matrix_set_color(LED_1, RGB_SPRINGGREEN);
+        rgb_matrix_set_color(LED_2, RGB_SPRINGGREEN);
+        rgb_matrix_set_color(LED_3, RGB_SPRINGGREEN);
+        rgb_matrix_set_color(LED_4, RGB_SPRINGGREEN);
+        rgb_matrix_set_color(LED_5, RGB_SPRINGGREEN);
+        rgb_matrix_set_color(LED_6, RGB_SPRINGGREEN);
+        rgb_matrix_set_color(LED_7, RGB_GREEN);
+        rgb_matrix_set_color(LED_8, RGB_GREEN);
+        rgb_matrix_set_color(LED_9, RGB_GREEN);
+        rgb_matrix_set_color(LED_0, RGB_SPRINGGREEN);
+        rgb_matrix_set_color(LED_MINS, RGB_CHARTREUSE);
+        rgb_matrix_set_color(LED_EQL, RGB_CHARTREUSE);
+        rgb_matrix_set_color(LED_U, RGB_GREEN);
+        rgb_matrix_set_color(LED_I, RGB_GREEN);
+        rgb_matrix_set_color(LED_O, RGB_GREEN);
+        rgb_matrix_set_color(LED_P, RGB_CHARTREUSE);
+        rgb_matrix_set_color(LED_J, RGB_GREEN);
+        rgb_matrix_set_color(LED_K, RGB_GREEN);
+        rgb_matrix_set_color(LED_L, RGB_GREEN);
+        rgb_matrix_set_color(LED_SCLN, RGB_CHARTREUSE);
+        rgb_matrix_set_color(LED_ENT, RGB_CHARTREUSE);
+        rgb_matrix_set_color(LED_M, RGB_SPRINGGREEN);
+        rgb_matrix_set_color(LED_COMM, RGB_SPRINGGREEN);
+        rgb_matrix_set_color(LED_DOT, RGB_CHARTREUSE);
+        rgb_matrix_set_color(LED_SLSH, RGB_CHARTREUSE);
+        rgb_matrix_set_color(LED_END, RGB_CHARTREUSE);
+        rgb_matrix_set_color(LED_RIGHT, RGB_CHARTREUSE);
+		rgb_matrix_set_color(LED_UP, RGB_DKRED);
+		rgb_matrix_set_color(LED_DOWN, RGB_DKRED);
+		rgb_matrix_set_color(LED_LEFT, RGB_DKRED);
+		rgb_matrix_set_color(LED_HOME, RGB_DKRED);
+		rgb_matrix_set_color(LED_PGUP, RGB_DKRED);
+		rgb_matrix_set_color(LED_PGDN, RGB_DKRED);
+		rgb_matrix_set_color(LED_W, RGB_GREEN); //light up gaming keys with WSAD higlighted
+        rgb_matrix_set_color(LED_S, RGB_GREEN);
+        rgb_matrix_set_color(LED_A, RGB_GREEN);
+        rgb_matrix_set_color(LED_D, RGB_GREEN);
+		rgb_matrix_set_color(LED_Q, RGB_DKRED);
+		rgb_matrix_set_color(LED_E, RGB_DKRED);
+		rgb_matrix_set_color(LED_R, RGB_DKRED);
+		rgb_matrix_set_color(LED_T, RGB_DKRED);
+		rgb_matrix_set_color(LED_Y, RGB_DKRED);
+		rgb_matrix_set_color(LED_F, RGB_DKRED);
+		rgb_matrix_set_color(LED_G, RGB_DKRED);
+		rgb_matrix_set_color(LED_H, RGB_DKRED);
+		rgb_matrix_set_color(LED_Z, RGB_DKRED);
+		rgb_matrix_set_color(LED_B, RGB_DKRED);
+		rgb_matrix_set_color(LED_N, RGB_DKRED);
+        break;
+		
+	default:
+        break;
+    }
 }
 #endif

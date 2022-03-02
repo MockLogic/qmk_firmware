@@ -18,3 +18,4 @@ AUTO_SHIFT_ENABLE = yes
 
 SRC += features/caps_word.c
 SRC += features/autocorrection.c
+SRC += features/select_word.c
