@@ -17,14 +17,28 @@ Mostly a QMK Learning project, this keymap includes a lot of featuers. It is int
 * A number pad layer.
 
 ## Keyboard Layout
-The base layout of the keyboard is nearly default. I have chose to put my Delete key between F12 and the Knob, and a Home key directly under the Knob, with the usual Page Up, Page Down, and End keys under that.
+The base layout of the keyboard is *nearly* default. I have chosen to put my Delete key between F12 and the Knob, and a Home key directly under the Knob, with the usual Page Up, Page Down, and End keys under that. My function key lives between the right Alt and Control.
 
 ## Function Controls
 Function + F1 or F2 records dynamic macros. Function + Escape ends a recording. Function + 1 or 2 plays them back.
 
+F4 brings up Task Manager in Windows.
+
 F5 selects the current word on most text editors. Tap it again to select the next word after that. Alternatively, Hold Shift (Function and Shift technically) when tapping F5 to select the current line. Keep tapping it to select more lines.
 
+F8 minimizes all windows except the current one.
+
+F9 brings up My Computer in Windows.
+
 Delete becomes Insert
+
+Home is Media Play/Pause.
+
+Page Up is Media Repeat song
+
+Page Down is Media Next song.
+
+End is Media Stop.
 
 The 9 and 0 keys activate Space Cadet Shift, but only for the Shift Keys.
 
@@ -32,7 +46,7 @@ Back Space clears the keyboard memory.
 
 Back slash resets the keyboard, as usual.
 
-Capslock toggles CapsWord feature.
+W toggles CapsWord feature.
 
 S toggles the Auto Shift feature.
 

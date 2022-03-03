@@ -15,6 +15,8 @@ STARTUP_NUMLOCK_ON = yes
 INVERT_NUMLOCK_INDICATOR = yes
 KEY_LOCK_ENABLE = yes
 AUTO_SHIFT_ENABLE = yes
+POINTING_DEVICE_ENABLE = yes
+POINTING_DEVICE_DRIVER = custom
 
 SRC += features/caps_word.c
 SRC += features/autocorrection.c

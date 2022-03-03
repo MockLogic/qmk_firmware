@@ -475,3 +475,4 @@ wierd         -> weird
 ## MockLogic Entries
 :teh:         -> the
 sheild        -> shield
+absolutle     -> absolute

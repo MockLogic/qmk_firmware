@@ -130,11 +130,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // The function keys.
 	// Space Cadet Shift and the Mouse Layer are over ridden on this layer.
     [_FN1] = LAYOUT(
-        DM_RSTP, DM_REC1, DM_REC2, _______, _______, SELWORD, _______, _______, _______, _______, _______, _______, _______, KC_INS,          _______,
-        _______, DM_PLY1, DM_PLY2, _______, _______, _______, _______, _______, _______, TG(_SPACE), TG(_SPACE), _______, _______, EEP_RST,          KC_HOME,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,            KC_PGUP,
-        MFCW,    _______, KC_ASTG, _______, _______, _______, _______, TJIGGLE, _______, KC_LOCK, _______, _______,          _______,          KC_PGDN,
-        KC_LSFT,          _______, _______, MFAC,    _______, _______, NK_TOGG, _______, _______, _______, _______,          KC_RSFT, KC_UP,   KC_END,
+        DM_RSTP, DM_REC1, DM_REC2, _______, RCS(KC_ESC), SELWORD, _______, _______, G(KC_HOME), KC_MYCM, _______, _______, _______, KC_INS,          _______,
+        _______, DM_PLY1, DM_PLY2, _______, _______, _______, _______, _______, _______, TG(_SPACE), TG(_SPACE), _______, _______, EEP_RST,          KC_MPLY,
+        _______, _______, MFCW,    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,            KC_MNXT,
+        _______,    _______, KC_ASTG, _______, _______, _______, _______, TJIGGLE, _______, KC_LOCK, _______, _______,          _______,          KC_MSTP,
+        KC_LSFT,          _______, _______, MFAC,    _______, _______, NK_TOGG, _______, _______, _______, _______,          KC_RSFT, KC_UP,   KC_MPRV,
         _______, _______, _______,                            _______,                            _______, _______, KC_LEAD, KC_LEFT, KC_DOWN, KC_RGHT
     ),
 
@@ -248,8 +248,17 @@ bool fet_ac_on = true;
 #include "features/select_word.h"
 
 // Mouse Jiggler
+// Custom Pointing Device Driver First
+void           pointing_device_driver_init(void) {}
+report_mouse_t pointing_device_driver_get_report(report_mouse_t mouse_report) { return mouse_report; }
+uint16_t       pointing_device_driver_get_cpi(void) { return 0; }
+void           pointing_device_driver_set_cpi(uint16_t cpi) {}
+//Jiggle Stuff Now
 bool mouse_jiggle_mode = false;
-
+// Un-fixing a bug to make mouse data reported
+bool has_mouse_report_changed(report_mouse_t new_report, report_mouse_t old_report) {
+    return memcmp(&new_report, &old_report, sizeof(new_report)) || mouse_jiggle_mode;
+}
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
 
@@ -437,16 +446,9 @@ LEADER_EXTERNS();
 // will have been matched.
 bool did_leader_succeed;
 
+// Matrix Scan User
 void matrix_scan_user(void) {
-  // Mouse Jiggler
-  if (mouse_jiggle_mode) {
-    tap_code(KC_MS_UP);
-    tap_code(KC_MS_DOWN);
-    tap_code(KC_MS_LEFT);
-    tap_code(KC_MS_RIGHT);
-    tap_code(KC_MS_WH_UP);
-    tap_code(KC_MS_WH_DOWN);
-  }
+
   caps_word_task();
   LEADER_DICTIONARY() {
     // Initialize did_leader_succeed as well as leading to be false
@@ -621,13 +623,20 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		rgb_matrix_set_color(LED_L, RGB_YELLOW); // Key Lock
 		rgb_matrix_set_color(LED_F1, RGB_YELLOW); // F1 record dynamic Macro 1
 		rgb_matrix_set_color(LED_F2, RGB_YELLOW); // F2 record dynamic Macro 2
+		rgb_matrix_set_color(LED_F4, RGB_CHARTREUSE); // F4 Task Manager
 		rgb_matrix_set_color(LED_F5, RGB_CHARTREUSE); // F5 Select Word
+		rgb_matrix_set_color(LED_F8, RGB_CHARTREUSE); // F8 Minimize all but focused
+		rgb_matrix_set_color(LED_F9, RGB_CHARTREUSE); // F9 My Computer
+		rgb_matrix_set_color(LED_HOME, RGB_CHARTREUSE); // Media Play/Pause
+		rgb_matrix_set_color(LED_PGUP, RGB_CHARTREUSE); // Media Previous
+		rgb_matrix_set_color(LED_PGDN, RGB_CHARTREUSE); // Media Next
+		rgb_matrix_set_color(LED_END, RGB_CHARTREUSE); // Media Stop
 		rgb_matrix_set_color(LED_1, RGB_GREEN); // Play Macro Recording 1
 		rgb_matrix_set_color(LED_2, RGB_GREEN); // Play Macro Recording 2
 		rgb_matrix_set_color(LED_BSLS, RGB_RED); // Reset Key
 		rgb_matrix_set_color(LED_BSPC, RGB_RED); // Clear EEPROM
 		rgb_matrix_set_color(LED_DEL, RGB_GREEN); // Insert
-		// If macro is recording, let blink through otherwise make yellow
+		// If macro is recording, let blink through otherwise make dark red
 		if(isRecording) {
 			// Do nothing
 		} else {
@@ -647,9 +656,9 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		}
 		// CapsWord
 		if(fet_cw_on) {
-			rgb_matrix_set_color(LED_CAPS, RGB_BLUE);
+			rgb_matrix_set_color(LED_W, RGB_BLUE);
 		} else {
-			rgb_matrix_set_color(LED_CAPS, RGB_ORANGE2);
+			rgb_matrix_set_color(LED_W, RGB_ORANGE2);
 		}
 		// Autocorrection
         if(fet_ac_on) {
@@ -835,7 +844,7 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		rgb_matrix_set_color(LED_HOME, RGB_DKRED);
 		rgb_matrix_set_color(LED_PGUP, RGB_DKRED);
 		rgb_matrix_set_color(LED_PGDN, RGB_DKRED);
-		rgb_matrix_set_color(LED_W, RGB_GREEN); //light up gaming keys with WSAD higlighted
+		rgb_matrix_set_color(LED_W, RGB_GREEN); //light up WASD
         rgb_matrix_set_color(LED_S, RGB_GREEN);
         rgb_matrix_set_color(LED_A, RGB_GREEN);
         rgb_matrix_set_color(LED_D, RGB_GREEN);
