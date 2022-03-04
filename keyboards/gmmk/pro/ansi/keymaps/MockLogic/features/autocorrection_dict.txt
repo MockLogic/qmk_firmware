@@ -476,3 +476,6 @@ wierd         -> weird
 :teh:         -> the
 sheild        -> shield
 absolutle     -> absolute
+fortuent      -> fortunate
+fortunet      -> fortunate
+immediatly    -> immediately
