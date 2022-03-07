@@ -17,7 +17,13 @@ Mostly a QMK Learning project, this keymap includes a lot of featuers. It is int
 * A number pad layer.
 
 ## Keyboard Layout
-The base layout of the keyboard is *nearly* default. I have chosen to put my Delete key between F12 and the Knob, and a Home key directly under the Knob, with the usual Page Up, Page Down, and End keys under that. My function key lives between the right Alt and Control.
+The base layout of the keyboard is *nearly* default. I have chosen to put my Delete key between F12 and the Knob, and a Home key directly under the Knob, with the usual Page Up, Page Down, and End keys under that. My function key lives right of the right Alt and the Right Control key has been replaced with a select word/line macro key.
+
+### Select Word / Line
+On Windows, pressing the select word key will select the current word regardless where in the word your cursor is. Key tapping the key to select additional words.
+
+Holding shift and hitting the macro will select the current line. Key pressing the key while holding shift to select additional lines.
+
 
 ## Function Controls
 Function + F1 or F2 records dynamic macros. Function + Escape ends a recording. Function + 1 or 2 plays them back.
@@ -59,6 +65,8 @@ N Toggles the N-Key Rollover function. This setting is retained in memory.
 L Activates a Key Lock. The next key pressed will be virtually held down by the keyboard until it is tapped again.
 
 Right Control turns on the Leader key.
+
+The encoder knob zooms pages in and out, and pressing the knob resets zoom.
 
 ## Leader Key options
 

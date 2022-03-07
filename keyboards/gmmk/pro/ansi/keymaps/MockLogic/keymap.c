@@ -104,7 +104,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,          KC_PGUP,
         KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,           KC_PGDN,
         KC_LSFT,          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_RSFT, KC_UP,   KC_END,
-        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(_FN1), KC_RCTL, KC_LEFT, KC_DOWN, KC_RGHT
+        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(_FN1), SELWORD, KC_LEFT, KC_DOWN, KC_RGHT
     ),
 
     // Space Cadet Shift overlay. Double tap Esc or re-use Function 9 or 0 to turn off.
@@ -130,7 +130,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // The function keys.
 	// Space Cadet Shift and the Mouse Layer are over ridden on this layer.
     [_FN1] = LAYOUT(
-        DM_RSTP, DM_REC1, DM_REC2, _______, RCS(KC_ESC), SELWORD, _______, _______, G(KC_HOME), KC_MYCM, _______, _______, _______, KC_INS,          _______,
+        DM_RSTP, DM_REC1, DM_REC2, _______, RCS(KC_ESC), _______, _______, _______, G(KC_HOME), KC_MYCM, _______, _______, _______, KC_INS,          LCTL(KC_0),
         _______, DM_PLY1, DM_PLY2, _______, _______, _______, _______, _______, _______, TG(_SPACE), TG(_SPACE), _______, _______, EEP_RST,          KC_MPLY,
         _______, _______, MFCW,    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,            KC_MNXT,
         _______,    _______, KC_ASTG, _______, _______, _______, _______, TJIGGLE, _______, KC_LOCK, _______, _______,          _______,          KC_MSTP,
@@ -227,6 +227,13 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
           rgb_matrix_increase_hue();
         } else {
           rgb_matrix_decrease_hue();
+        }
+	// If primary function layer is active do zoom. Using tap_code16 so can work with control mods.
+	} else if(layer_state_is(_FN1)) {
+		if (clockwise) {
+          tap_code16(LCTL(KC_PPLS)); // + when combined with Left Control should zoom in.
+        } else {
+          tap_code16(LCTL(KC_PMNS)); // - when combined with Left Control should zoom out.
         }
 	// Otherwise, adjust volume
 	} else {
@@ -624,7 +631,7 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		rgb_matrix_set_color(LED_F1, RGB_YELLOW); // F1 record dynamic Macro 1
 		rgb_matrix_set_color(LED_F2, RGB_YELLOW); // F2 record dynamic Macro 2
 		rgb_matrix_set_color(LED_F4, RGB_CHARTREUSE); // F4 Task Manager
-		rgb_matrix_set_color(LED_F5, RGB_CHARTREUSE); // F5 Select Word
+		// rgb_matrix_set_color(LED_F5, RGB_CHARTREUSE); // F5 
 		rgb_matrix_set_color(LED_F8, RGB_CHARTREUSE); // F8 Minimize all but focused
 		rgb_matrix_set_color(LED_F9, RGB_CHARTREUSE); // F9 My Computer
 		rgb_matrix_set_color(LED_HOME, RGB_CHARTREUSE); // Media Play/Pause
