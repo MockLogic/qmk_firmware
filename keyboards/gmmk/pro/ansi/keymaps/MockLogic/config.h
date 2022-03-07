@@ -62,3 +62,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // AutoShift settings
 #define AUTO_SHIFT_TIMEOUT 150 // How long a key needs to be pressed to be shifted. 
 #define AUTO_SHIFT_DISABLED_AT_STARTUP // Use it, but not enabled by default.
+
+// My Spacecadet Shift default
+#define SPACECADET_ENABLE_AT_STARTUP

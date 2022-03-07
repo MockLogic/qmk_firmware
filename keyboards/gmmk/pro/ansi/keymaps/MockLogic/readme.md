@@ -30,21 +30,23 @@ Function + F1 or F2 records dynamic macros. Function + Escape ends a recording. 
 
 F4 brings up Task Manager in Windows.
 
-F5 selects the current word on most text editors. Tap it again to select the next word after that. Alternatively, Hold Shift (Function and Shift technically) when tapping F5 to select the current line. Keep tapping it to select more lines.
+F10 Media Previous Song
 
-F8 minimizes all windows except the current one.
+F11 Media Play/Pause
+
+F12 Medai Next Song
 
 F9 brings up My Computer in Windows.
 
 Delete becomes Insert
 
-Home is Media Play/Pause.
+Home opens My computer
 
-Page Up is Media Repeat song
+Page Up cycles thorugh oppen apps
 
-Page Down is Media Next song.
+Page Down opens Clipboard History
 
-End is Media Stop.
+End hides/displays the desktop (minmizes all/returns them)
 
 The 9 and 0 keys activate Space Cadet Shift, but only for the Shift Keys.
 
