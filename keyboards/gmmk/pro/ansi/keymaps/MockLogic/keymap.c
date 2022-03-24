@@ -100,10 +100,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Press Fn+N to toggle between 6KRO and NKRO. This setting is persisted to the EEPROM and thus persists between restarts.
     [_BASE] = LAYOUT(
         KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_DEL,          KC_MUTE,
-        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,          KC_HOME,
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,          KC_PGUP,
-        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,           KC_PGDN,
-        KC_LSFT,          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_RSFT, KC_UP,   KC_END,
+        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,          KC_MYCM,
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,          A(KC_ESC),
+        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,           G(KC_V),
+        KC_LSFT,          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_RSFT, KC_UP,   G(KC_D),
         KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(_FN1), SELWORD, KC_LEFT, KC_DOWN, KC_RGHT
     ),
 
@@ -131,10 +131,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	// Space Cadet Shift and the Mouse Layer are over ridden on this layer.  
     [_FN1] = LAYOUT(
         DM_RSTP, DM_REC1, DM_REC2, _______, RCS(KC_ESC), _______, _______, _______, _______, KC_MPLY, KC_MPRV, KC_MNXT, KC_MSTP, KC_INS,          LCTL(KC_0),
-        _______, DM_PLY1, DM_PLY2, _______, _______, _______, _______, _______, _______, TG(_SPACE), TG(_SPACE), _______, _______, EEP_RST,         KC_MYCM,
-        _______, _______, MFCW,    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,                 A(KC_ESC),
-        _______,    _______, KC_ASTG, _______, _______, _______, _______, TJIGGLE, _______, KC_LOCK, _______, _______,          _______,            G(KC_V),
-        KC_LSFT,          _______, _______, MFAC,    _______, _______, NK_TOGG, _______, _______, _______, _______,          KC_RSFT, KC_UP,        G(KC_D),
+        _______, DM_PLY1, DM_PLY2, _______, _______, _______, _______, _______, _______, TG(_SPACE), TG(_SPACE), _______, _______, EEP_RST,         KC_HOME,
+        _______, _______, MFCW,    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,                 KC_PGUP,
+        _______,    _______, KC_ASTG, _______, _______, _______, _______, TJIGGLE, _______, KC_LOCK, _______, _______,          _______,            KC_PGDN,
+        KC_LSFT,          _______, _______, MFAC,    _______, _______, NK_TOGG, _______, _______, _______, _______,          KC_RSFT, KC_UP,        KC_END,
         _______, _______, _______,                            _______,                            _______, _______, KC_LEAD, KC_LEFT, KC_DOWN, KC_RGHT
     ),
 
@@ -637,10 +637,10 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		rgb_matrix_set_color(LED_F10, RGB_CHARTREUSE); // F10 Media Previous
 		rgb_matrix_set_color(LED_F11, RGB_SPRINGGREEN); // F11 Media Play/Pause
 		rgb_matrix_set_color(LED_F12, RGB_CHARTREUSE); // F12 Media Next
-		rgb_matrix_set_color(LED_HOME, RGB_CHARTREUSE); // My Computer
-		rgb_matrix_set_color(LED_PGUP, RGB_CHARTREUSE); // Cycle through Apps
-		rgb_matrix_set_color(LED_PGDN, RGB_CHARTREUSE); // Clipboard History
-		rgb_matrix_set_color(LED_END, RGB_CHARTREUSE); // Dispaly/Hide Desktop
+		rgb_matrix_set_color(LED_HOME, RGB_GREEN); // Home
+		rgb_matrix_set_color(LED_PGUP, RGB_GREEN); // Page Up
+		rgb_matrix_set_color(LED_PGDN, RGB_GREEN); // Page Down
+		rgb_matrix_set_color(LED_END, RGB_GREEN); // End
 		rgb_matrix_set_color(LED_1, RGB_GREEN); // Play Macro Recording 1
 		rgb_matrix_set_color(LED_2, RGB_GREEN); // Play Macro Recording 2
 		rgb_matrix_set_color(LED_BSLS, RGB_RED); // Reset Key

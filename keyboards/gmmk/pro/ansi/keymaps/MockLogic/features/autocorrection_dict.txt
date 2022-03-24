@@ -479,3 +479,6 @@ absolutle     -> absolute
 fortuent      -> fortunate
 fortunet      -> fortunate
 immediatly    -> immediately
+buisness      -> business  
+sincerly      -> sincerely
+:tset         -> test
