@@ -38,7 +38,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_PGUP,   KC_P7,   KC_P8,   KC_P9,
         KC_PGDN,   KC_P4,   KC_P5,   KC_P6,   KC_PPLS,
         KC_END,    KC_P1,   KC_P2,   KC_P3,
-        MO(1),       KC_P0,            KC_PDOT, KC_PENT
+        MO(1),     KC_P0,            KC_PDOT, KC_PENT
     ),
 
     /*
@@ -49,7 +49,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * ├───┼───┼───┼───┼───┤
      * │RGB│Hom│ ↑ │PgU│   │
      * ├───┼───┼───┼───┤ + │
-     * │RGB│ ← │   │ → │   │
+     * │RGB│ $ │ ← │ → │   │
      * ├───┼───┼───┼───┤───┤
      * │RGB│End│ ↓ │PgD│   │
      * ├───┼───┴───┼───┤Ent│
@@ -60,7 +60,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         RESET,   _______, _______, _______, _______,
         RGB_TOG, _______, _______, _______, _______,
         RGB_MOD, KC_HOME, KC_UP,   KC_PGUP,
-        RGB_HUI, KC_LEFT, XXXXXXX, KC_RGHT, _______,
+        RGB_HUI, KC_DLR,  KC_LEFT, KC_RGHT, _______,
         RGB_VAI, KC_END,  KC_DOWN, KC_PGDN,
         _______, KC_INS,           KC_DEL,  _______
     )
