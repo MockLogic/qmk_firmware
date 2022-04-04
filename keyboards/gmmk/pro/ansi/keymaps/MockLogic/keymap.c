@@ -32,11 +32,13 @@ Includes Mouse Jiggler from: https://github.com/DIYCharles/MouseJiggler/blob/mas
 #define _RGB 7
 #define _ASHIFT 8
 #define _NUM 9
+#define _KID 10
 
 
 // Tap Dance declarations
 enum {
-	TD_ESC_GM
+	TD_ESC_GM,
+	TD_ESC_KID
 };
 
 // Custom Key Codes
@@ -64,7 +66,9 @@ enum custom_keycodes {
 // Tap Dance definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
     // Tap once for Escape, twice for layer toggle
-	[TD_ESC_GM] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_ESC, _GAME)
+	[TD_ESC_GM] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_ESC, _GAME),
+	// Tap once for nothing, twice for layer toggle
+	[TD_ESC_KID] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_NO, _KID)
 };
 
 // clang-format off
@@ -215,35 +219,122 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,          KC_NO,   _______, _______, _______, KC_NO,   KC_NO,   KC_P0,   KC_P0,   KC_PDOT, KC_PSLS,          _______, KC_NO,   KC_PENT,
         _______, _______, _______,                            _______,                            _______, KC_NO,   _______, KC_NO,   KC_NO,   KC_PENT
     ),
+	
+	/* _KID layout
+	* RGB play mode where none of the buttons do anything inportant so a toddler can mess with it as a distraction durring zoom calls.
+	* Press ESC twice to exit the mode.
+	*/
+	[_KID] = LAYOUT(
+        TD(TD_ESC_KID), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,          KC_NO,
+        KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO, KC_NO,          KC_NO,
+        KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO, KC_NO, KC_NO,          KC_NO,
+        KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO,          KC_NO,          KC_NO,
+        KC_NO,          KC_NO,   KC_NO, KC_NO, KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO,          KC_NO, KC_NO,   KC_NO,
+        KC_NO, KC_NO, KC_NO,                            KC_NO,                            KC_NO, KC_NO,   KC_NO, KC_NO,   KC_NO,   KC_NO
+    ),
 
 };
 // clang-format on
 
 #ifdef ENCODER_ENABLE
 bool encoder_update_user(uint8_t index, bool clockwise) {
-	// If the RGB layer is active, change colors.
-    if(layer_state_is(_RGB)) {
-		if (clockwise) {
+	// Change the encoder knob function based on highest layer.
+    
+	switch (get_highest_layer(layer_state)) {
+	
+	case _RGB: 
+	if (clockwise) {
           rgb_matrix_increase_hue();
         } else {
           rgb_matrix_decrease_hue();
         }
-	// If primary function layer is active do zoom. Using tap_code16 so can work with control mods.
-	} else if(layer_state_is(_FN1)) {
+		break;
+		
+	case _KID:
 		if (clockwise) {
+          rgb_matrix_increase_hue_noeeprom();
+        } else {
+          rgb_matrix_decrease_hue_noeeprom();
+        }
+		break;
+		
+	case _FN1:
+	    if (clockwise) {
           tap_code16(LCTL(KC_PPLS)); // + when combined with Left Control should zoom in.
         } else {
           tap_code16(LCTL(KC_PMNS)); // - when combined with Left Control should zoom out.
         }
-	// Otherwise, adjust volume
-	} else {
-		if (clockwise) {
+		break;
+		
+	case _BASE:
+	    if (clockwise) {
           tap_code(KC_VOLU);
         } else {
           tap_code(KC_VOLD);
         }
-	}
-    return true;
+        break;
+	
+	case _SPACE:
+	    if (clockwise) {
+          tap_code(KC_VOLU);
+        } else {
+          tap_code(KC_VOLD);
+        }
+        break;
+	
+	case _MOUSE:
+	    if (clockwise) {
+          tap_code(KC_VOLU);
+        } else {
+          tap_code(KC_VOLD);
+        }
+        break;
+	
+	case _GAME:
+	    if (clockwise) {
+          tap_code(KC_VOLU);
+        } else {
+          tap_code(KC_VOLD);
+        }
+        break;
+	
+	case _FN2:
+	    if (clockwise) {
+          tap_code(KC_VOLU);
+        } else {
+          tap_code(KC_VOLD);
+        }
+        break;
+	
+	case _LEADER:
+	    if (clockwise) {
+          tap_code(KC_VOLU);
+        } else {
+          tap_code(KC_VOLD);
+        }
+        break;
+		
+	case _NUM:
+	    if (clockwise) {
+          tap_code(KC_VOLU);
+        } else {
+          tap_code(KC_VOLD);
+        }
+        break;
+		
+	case _ASHIFT:
+	    if (clockwise) {
+          tap_code(KC_VOLU);
+        } else {
+          tap_code(KC_VOLD);
+        }
+        break;
+	
+	default:
+	    break;
+	};
+	
+    return false;
 }
 #endif // ENCODER_ENABLE
 
@@ -509,6 +600,14 @@ void matrix_scan_user(void) {
 	SEQ_THREE_KEYS(KC_N, KC_U, KC_M) {
       // When I press KC_LEAD and then NUM
       layer_on(_NUM);
+	  did_leader_succeed = true;
+    }
+	
+	SEQ_FIVE_KEYS(KC_K, KC_I, KC_D, KC_D, KC_O) {
+      // When I press KC_LEAD and then KIDDO
+      layer_on(_KID);
+	  rgb_matrix_mode_noeeprom(RGB_MATRIX_SPLASH);
+	  rgb_matrix_sethsv_noeeprom(255, 255, 255);
 	  did_leader_succeed = true;
     }
 	
@@ -870,6 +969,11 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		rgb_matrix_set_color(LED_B, RGB_DKRED);
 		rgb_matrix_set_color(LED_N, RGB_DKRED);
         break;
+		
+	// KID active RGB
+    case _KID:
+        rgb_matrix_set_color(LED_ESC, RGB_PURPLE);
+		break;
 		
 	default:
         break;
