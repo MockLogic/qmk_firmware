@@ -43,4 +43,4 @@
 #define AUTO_SHIFT_DISABLED_AT_STARTUP // Use it, but not enabled by default.
 
 // My Spacecadet Shift default
-#define SPACECADET_ENABLE_AT_STARTUP
+// #define SPACECADET_ENABLE_AT_STARTUP

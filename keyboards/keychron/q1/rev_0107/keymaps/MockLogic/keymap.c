@@ -1035,10 +1035,10 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 }
 #endif
 
-#ifdef SPACECADET_ENABLE_AT_STARTUP
+// #ifdef SPACECADET_ENABLE_AT_STARTUP
 // Start up code to execute?
-void keyboard_post_init_user(void) {
-    // Turn on the Space Cadet layer at boot up.
-	layer_on(_SPACE);
-}
-#endif
+// void keyboard_post_init_user(void) {
+//     // Turn on the Space Cadet layer at boot up.
+// 	layer_on(_SPACE);
+// }
+// #endif
